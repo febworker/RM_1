@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.theme import Theme
 from rich.progress import track
 
-from clean_folder.clean import sort_folder
+from sort_folder.clean import sort_folder
 
 custom_theme = Theme(
     {"success": "bold green", "error": "bold red", "warning": "bold yellow"})
