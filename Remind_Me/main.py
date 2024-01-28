@@ -11,12 +11,48 @@ from rich.console import Console
 from rich.theme import Theme
 from rich.progress import track
 from cleaner import clean
+from abc import ABC, abstractmethod  # Add import for ABC
 
 # Define a custom theme for rich library
 
 custom_theme = Theme(
     {"success": "bold green", "error": "bold red", "warning": "bold yellow", "menu": "yellow", "row": "bright_blue", "note": "bold magenta"})
 console = Console(theme=custom_theme)
+
+# Define an abstract base class for user interfaces
+class UserInterface(ABC):
+    @abstractmethod
+    def print_menu(self, menu_options):
+        pass
+
+    @abstractmethod
+    def get_user_input(self, prompt):
+        pass
+
+    @abstractmethod
+    def print_message(self, message, style=None):
+        pass
+
+    @abstractmethod
+    def print_contact(self, contact):
+        pass
+
+# Implement a concrete class for the console user interface
+class ConsoleUserInterface(UserInterface):
+    def print_menu(self, menu_options):
+        console.print('-' * 50 + "Main menu of contacts:" + '-' * 53, style="row")
+        for option in menu_options:
+            console.print(option, style="menu")
+        console.print('-' * 125, style="row")
+
+    def get_user_input(self, prompt):
+        return input(prompt)
+
+    def print_message(self, message, style=None):
+        console.print(message, style=style)
+
+    def print_contact(self, contact):
+        console.print(contact, style="success")
 
 # Parent class for all fields
 
@@ -535,3 +571,39 @@ if __name__ == '__main__':
     address_book = AddressBook()  # create object
     filename = 'contacts.pkl'
     main()
+
+@error_handler
+def main(ui):
+    try:
+        if os.path.getsize(filename) > 0:
+            address_book.restore_from_file(filename)
+    except Exception:
+        ui.print_message('First run, the file will be created')
+
+    for i in track(range(5), description="Loading data..."):
+        ui.print_message(f"loading {i}")
+        time.sleep(0.5)
+
+    while True:
+        ui.print_menu(["| 1. Add | 2.All contacts | 3.Edit | 4.Delete | 5.Find | 6.Birthday soon! | 7.Note menu | 8.Sort directory | 9. Save & Exit |"])
+        choice = ui.get_user_input("Choose an option: ")
+
+        if choice == '1':
+            address_book.add_record(address_book.get_contact())
+            ui.print_message('Contact added successfully', style="success")
+
+        elif choice == '2':
+            for page in address_book:
+                for record in page:
+                    ui.print_contact(record)
+
+        elif choice == '9':
+            address_book.save_to_file(filename)
+            ui.print_message("Contactbook saved, have a nice day! :D", style="success")
+            break
+
+if __name__ == '__main__':
+    address_book = AddressBook()
+    filename = 'contacts.pkl'
+    console_ui = ConsoleUserInterface()
+    main(console_ui)
