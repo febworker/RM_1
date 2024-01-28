@@ -12,12 +12,13 @@ from rich.theme import Theme
 from rich.progress import track
 from cleaner import clean
 
+# Define a custom theme for rich library
+
 custom_theme = Theme(
     {"success": "bold green", "error": "bold red", "warning": "bold yellow", "menu": "yellow", "row": "bright_blue", "note": "bold magenta"})
 console = Console(theme=custom_theme)
 
-# Parrent class for all fields
-
+# Parent class for all fields
 
 class Field:
     def __init__(self, value=None):
@@ -35,8 +36,7 @@ class Field:
     def __repr__(self):
         return f"{self.__class__.__name__}({self.value})"
 
-# Class for contact name, allow letters and space characters
-
+# Class for contact name, allowing letters and space characters
 
 class Name(Field):
     @Field.value.setter
@@ -46,8 +46,7 @@ class Name(Field):
         else:
             raise ValueError('Name should include only letter characters')
 
-# Class for contact birthday date  allow "YYYY-MM-DD" format
-
+# Class for contact birthday date, allowing "YYYY-MM-DD" format
 
 class Birthday(Field):
     @Field.value.setter
@@ -59,8 +58,7 @@ class Birthday(Field):
             except Exception:
                 raise ValueError("Date should be in the format YYYY-MM-DD")
 
-# Class for contact phone with checking according UA providers
-
+# Class for contact phone with checking according to UA providers
 
 class Phone(Field):
     @Field.value.setter
@@ -71,8 +69,7 @@ class Phone(Field):
         else:
             raise ValueError('Phone is not valid')
 
-# Class for contact email, allow format for more common email addresses
-
+# Class for contact email, allowing format for more common email addresses
 
 class Email(Field):
     @Field.value.setter
@@ -92,8 +89,7 @@ class Address(Field):
     def value(self, value):
         self._Field__value = value
 
-# Class for contact notes, any string
-
+# Class for contact notes, allowing any string
 
 class Note(Field):
     @Field.value.setter
@@ -101,7 +97,6 @@ class Note(Field):
         self._Field__value = value
 
 # Class for contacts main information
-
 
 class Record:
     def __init__(self, name, phone, birthday, email, notes=None, address=None) -> None:
@@ -189,6 +184,7 @@ class Record:
         return sorted_notes
 
 # Methods defines days to birthdays of the contact
+    
     def days_to_birthday(self):
         if self.birthday:
             date_now = datetime.now().date()
@@ -209,7 +205,6 @@ class Record:
             f"Notes: {'; '.join(note.value for note in self.notes) if self.notes else 'N/A'} || ")
 
 # Class store all contacts and main logic contacts processing
-
 
 class AddressBook(UserDict):
     def add_record(self, record: Record):  # add record in dictionary
@@ -246,6 +241,7 @@ class AddressBook(UserDict):
         return results
 
 # Methods for user interaction, to retrieve contact record
+    
     def validate_input(self, prompt, validation_func):
         while True:
             user_input = input(prompt)
@@ -269,6 +265,7 @@ class AddressBook(UserDict):
         return Record(name, phone, birthday, email, message, address)
 
 # Method for page view of the contact list
+    
     def __iter__(self) -> Iterator:
         # Iterable class
         return AddressBookIterator(self.data.values(), page_size=2)
@@ -277,9 +274,7 @@ class AddressBook(UserDict):
     def __repr__(self):
         return f"AddressBook({self.data})"
 
-
 # Class iterator
-
 
 class AddressBookIterator:
     def __init__(self, records_list, page_size):
@@ -306,7 +301,6 @@ class AddressBookIterator:
         return result
 
 # Error handler
-
 
 def error_handler(func):
     def inner(*args, **kwargs):
@@ -348,7 +342,7 @@ def main():
                 for record in page:
                     console.print(record, style="success")
 
-# //////////////////////////CONTACT EDIT MENU///////////////////////
+# ///CONTACT EDIT MENU///
 
         elif choice == '3':
             while True:
@@ -402,7 +396,7 @@ def main():
                     console.print(
                         "Invalid choice. Please try again.", style="error")
 
-# //////////////////////////CONTACT EDIT MENU///////////////////////
+# ///CONTACT EDIT MENU///
 
         elif choice == '4':  # Delete contact
             contact_name = input("Enter contact name to delete: ")
@@ -427,7 +421,7 @@ def main():
                         console.print(
                             f"To {record.name.value}s birthday {m} days", style='success')
 
-# /////////////////////// NOTES MENU /////////////////////////
+# ///Notes MENU///
 
         elif choice == '7':
             while True:
@@ -514,7 +508,7 @@ def main():
                     console.print(
                         "Invalid choice. Please try again.", style="error")
 
-# /////////////////////////// END NOTES MENU//////////////////////////////
+# ///Notes MENU///
 
         elif choice == '8':  # sort folder
             folder = input("Enter folder path to sort: ")
