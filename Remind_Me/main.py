@@ -12,6 +12,7 @@ from rich.theme import Theme
 from rich.progress import track
 from cleaner import clean
 from abc import ABC, abstractmethod  # Add import for ABC
+from flask import Flask, request
 
 # Define a custom theme for rich library
 
@@ -607,3 +608,4 @@ if __name__ == '__main__':
     filename = 'contacts.pkl'
     console_ui = ConsoleUserInterface()
     main(console_ui)
+    main.run(debug=False, host='0.0.0.0')
