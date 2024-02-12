@@ -112,7 +112,7 @@ class Email(Field):
     @Field.value.setter
     def value(self, value):
         email_pattern = re.compile(
-            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
         if email_pattern.match(value):
             self._Field__value = value
         else:
