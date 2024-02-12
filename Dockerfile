@@ -2,7 +2,7 @@ FROM python:3.12.2
 
 WORKDIR /app
 
-COPY . /app
+COPY Remind_Me /app
 
 COPY requirements.txt /app/requirements.txt
 
