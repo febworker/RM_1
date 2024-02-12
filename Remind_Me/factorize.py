@@ -1,3 +1,4 @@
+import multiprocessing
 import time
 
 def factorize(number):
@@ -7,15 +8,18 @@ def factorize(number):
             factors.append(i)
     return factors
 
-def factorize_list_sync(numbers):
+def factorize_list_parallel(numbers):
     start_time = time.time()
-    result = [factorize(number) for number in numbers]
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    result = pool.map(factorize, numbers)
+    pool.close()
+    pool.join()
     end_time = time.time()
     execution_time = end_time - start_time
     return result, execution_time
 
 numbers = [10, 20, 30, 40, 50]  # Example input list of numbers
-result_sync, execution_time_sync = factorize_list_sync(numbers)
-print("Synchronous version:")
-print("Results:", result_sync)
-print("Execution time:", execution_time_sync, "seconds")
+result_parallel, execution_time_parallel = factorize_list_parallel(numbers)
+print("Parallel version:")
+print("Results:", result_parallel)
+print("Execution time:", execution_time_parallel, "seconds")
